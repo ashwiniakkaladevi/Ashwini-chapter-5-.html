@@ -1,0 +1,222 @@
+<html>
+    <head></head>
+    <body>
+        <hr style="height: 2px; color:blue; background-color:blue;">
+
+        <h2 class="b"><b>Chapter 5. Migrating from Tivoli NetView for z/OS V6R2</b></h2>
+        <p>When you are migrating from the Tivoli NetView for z/OS V6R2, you can either add the NetView V6R3<br> content into your V6R2 NetView definitions, or add your V6R2 customization to the default V6R3<br> members supplied with the NetView program. Either way, place the customized member into an<br> appropriate user-allocated data set such as NETVIEW.V6R3USER.CNM01.DSIPARM. Do not customize<br> members in the SMP/E-managed data sets such as NETVIEW.V6R3M0.DSIPARM.<br>
+            Usage note: The migration information is based on the NetView components that are supplied with the<br> initial release of V6R3. Review your maintenance to see if you already made some of the changes.<br>
+            Several factors can influence the method that you use when migrating your NetView definition members.<br> Factors such as the size and complexity of your network, security policies that must be followed, and<br> established practices within your business can all influence what is the best method for your migration.<br> The checklist that follows details the documented method of migration as outlined in this book and<br> supported by other books in the NetView library. Choose the method of migration that is best for you.<br>
+            Do the following steps to migrate your V6R2 definitions:</li><br>
+            <li>1.	Allocate a new set of V6R3 user data sets by running the CNMSJ002 sample job. You did this when you<br> completed the steps in Table 12 on page 16.</li><br>
+            <li>2.	Define a unique &NV2I value (xx) for each NetView domain.</li><br>
+            <li>3.	Review your customized V6R2 copy of the CNMSTYLE member. If you did not already do so, move all<br> of your domain-specific customization of V6R2 CNMSTYLE statements into the CxxSTGEN member<br> and all of your system-wide customization of V6R2 CNMSTYLE statements into the CNMSTUSR<br> member. Do not copy your V6R2 CNMSTYLE member into the V6R3 user DSIPARM data set.</li><br>
+            <li>4.	Review the CNMSTYLE information in this chapter and the V6R3 CNMSTNXT member that is included<br> with the NetView program. Place any domain-specific customization of CNMSTYLE statements into the<br> CxxSTGEN member and any system-wide customization of CNMSTYLE statements into the CNMSTUSR<br> member. Do not modify the V6R3 default CNMSTYLE member.</li><br>
+            <li>5.	Review the remaining information in this chapter, and migrate your V6R2 NetView definition members<br> and JCL procedures as appropriate, placing only those members that were modified into the V6R3<br> user data sets.</li><br>
+            Figure 4 on page 73 shows the NetView V6R3 initialization flow. Keep this new initialization flow in mind<br> as you make changes to your DSIPARM members.<br>
+            </p>
+            <img src="C:\Users\Shona\Pictures\Screenshots\Image1.png"><br>
+            <hr><hr>
+           
+            <p>Note: Review CNMSTNXT to see statement changes made to CNMSTYLE members for NetView V6R3<br> program.<br>
+                For changes by release, including changed panels, commands, messages, and samples, see the following<br> appendixes:<br>
+                <u>•	Appendix B, “Changes from Tivoli NetView for z/OS V6R2 to Tivoli NetView for z/OS V6R2M1,” on page<br> 129<br></u>
+                <u> •	Appendix C, “Changes from Tivoli NetView for z/OS V6R2M1 to IBM Z NetView V6R3,” on page 147<br><br></u>
+
+                </p>
+            <h3 class="b">New Samples</h3>
+            <hr style="height: 1px; color:blue; background-color:blue;"><br>
+            <p>Table 30 on page 74 lists new samples to review during migration.<br>
+                <i>Table 30. List of New Samples</i><br></p>
+                <table border="1" cellpadding="5" cellspacing="1" border-left="none" border-right="none">
+                    <b><tr class="Table"><td><b>Distributed As</b></td><td><b>Name</b></td><td><b>Description</b></td><td><b>Data Set Name</b></td></tr></b>
+                    <tr style="border: 2px solid black;"><td>application.yml</td><td>same</td><td>Sample setup for server configuration, provided<br> in the NetView ZFS.</td><td>/usr/lpp/<br> netview/v6r3/<br> restsrvr/<br> samples</td></tr>
+                    <tr class="Table"><td>CNMS8053</td><td>same</td><td>Saves long global variables</td><td>CNMSAMP</td></tr>
+                    <tr><td>CNMS8054</td><td>same</td><td>Restores long global variables</td><td>CNMSAMP</td></tr>
+                    <tr><td>CNMSCATU</td><td>same</td><td>User-defined command authorization table<br> definitions</td><td>DSIPARM</td></tr>
+                    <tr><td>CNMSCSDP</td><td>same</td><td>Command Statistics sample that saves command<br> statistics records in a Comma-Separated Values<br> (CSV) file format.</td><td>CNMSAMP</td></tr>
+                    <tr><td>CNMSCSFM</td><td>same</td><td>Command Statistics sample that formats in-storage<br> command statistics records for the CMDMON<br> DISPLAY command.</td><td>CNMSAMP</td></tr>
+                    <tr><td>CNMSCSIE</td><td>same</td><td>Command Statistics sample that shows how to<br> include and exclude subsets of NetView commands<br> for data collection.</td><td>CNMSAMP</td></tr>
+                    <tr><td>CNMSCSSU</td><td>same</td><td>Command Statistics sample that summarizes the<br> data contained in in-storage command statistics<br> records.</td><td>CNMSAMP</td></tr>
+                    <tr><td>CNMSDSCP</td><td>same</td><td>Command Statistics Data Processor</td><td>CNMSAMP</td></tr>
+                    <tr><td>CNMSJM15</td><td>same</td><td>Migrates the save/restore (DSISVRT) VSAM cluster</td><td>CNMSAMP</td></tr>
+                    <tr><td>CNMSJSNF</td><td>same</td><td>A new PROCEDURE JCL needed to create Sniffer<br> trace format data sets.</td><td>CNMSAMP</td></tr>
+                    <tr><td>CNMSTACT</td><td>same</td><td>This sample includes the CNMSTAAL member if the<br> IBM Z NetView for Continuous Availability product<br> is installed. The CNMSTACT member is used for the<br> GDPS Continuous Availability solution.</td><td>SAQNPARM</td></tr>
+                    <tr><td>CNMSZERT</td><td>same</td><td>Formats TCPCONN output.<br>This sample calls the WINDOW command and <br>displays Connection encryption information from the<br> CONNSEC QUERY command.	</td><td>CNMSAMP</td></tr><br>
+                </table>
+                    <hr><hr>
+                    <i>Table 30. List of New Samples (continued)</i><br>
+                    <table border="1" cellpadding="5" cellspacing="1" border-left="none" border-right="none">
+                    <tr><td><b>Distributed As</b></td><td><b>Name</b></td><td><b>Description</b></td><td><b>Data Set Name</b></td></tr>
+                    <tr><td>EJNNVCMD</td><td>same</td><td>NetView REST Server command processor. This<br>
+                        sample is derived from sample CNMS8029<br>
+                        (NETVCMD).
+                        </td><td>/usr/lpp/<br>
+                    netview/v6r3/<br>
+                    restsrvr/bin
+                    </td></tr>
+                    <tr><td>EJNSSRST</td><td>same</td><td>Startup procedure for the NetView REST Server,<br>
+                        provided so the server can be started as a data<br>
+                        space within NetView.
+                        </td><td>EJNSSRST</td></tr>
+                    <tr><td>NetViewRestSe<br>
+                        rver.yml
+                        </td><td>same</td><td>Sample yml file for integration with Zowe™<br>
+                            Mediation Layer.
+                            </td><td>/usr/lpp/<br>
+                                netview/v6r3/<br>
+                                restsrvr/<br>
+                                samples
+                                </td></tr>
+                    <tr><td>NetViewSample</td><td>same</td><td>Sample application for Zowe™ that provides some<br>
+                        guidance on how to use the new NetView APIs.
+                        </td><td>/usr/lpp/<br>
+                            netview/v6r3/<br>
+                            restsrvr/<br>
+                            samples/zowe
+                            </td></tr>
+                </table><br>
+<h3 class="b"><b>VTAM Address Space</b></h3>
+<hr style="height: 1px; color:blue; background-color:blue;"><br>
+<p>The following samples list changes for the VTAM address space.</p>
+   <h3><b> CNMNET (CNMSJ008)</b></h3>
+    <p>CNMNET (CNMSJ008) is the start procedure for the VTAM program.<br> Change CNMNET in your PROCLIB in the following way:<br>
+    1.	For NetView data sets, ensure that your high-level qualifier for system data sets points to<br> NETVIEW.V6R3M0.<br>
+    2.	For NetView data sets, ensure that your high-level qualifier for user-defined data sets points to<br> NETVIEW.V6R3USER.<br></p>
+    </p>
+    <h3 class="b"><b>NetView Address Space</b></h3>
+    <hr style="height: 1px; color:blue; background-color:blue;"><br>
+    <p>The following samples list changes for the NetView address space.</p><br>
+    <h3><b>CNMPROC (CNMSJ009)</b></h3><br>
+CNMPROC (CNMSJ009) is the start procedure for the NetView program.<br>
+Make the following changes to the CNMPROC member in your PROCLIB data set:<br>
+1.	For NetView data sets, ensure that your high-level qualifier for user-defined data sets points to<br> NETVIEW.V6R3USER.<br>
+2.	For NetView data sets, ensure that your high-level qualifier for system data sets points to<br> NETVIEW.V6R3M0.<br>
+<h3><b>CNMPSSI (CNMSJ010)</b></h3>
+The CNMPSSI (CNMSJ010) member starts the NetView subsystem address space.<br> Make the following changes to the CNMPSSI member in your PROCLIB data set:<br>
+1. Ensure that the high-level qualifier for system data sets points to NETVIEW.V6R3M0.<br>
+<hr><hr>
+<h3><b>CNMSCAT2</b></h3>
+<p>DSIPARM member CNMSCAT2 contains the sample command authorization table.<br>
+    As of NetView V6.3, a sample IBM Z System Automation command authorization table named INGCAT1 is<br> included if the SA.SYSOPS tower and subtower are enabled.<br>
+    <h3><b>CNMSCATU</b></h3>
+    With NetView for z/OS V6.2.1 APAR OA48179, a sample command authorization table named CNMSCATU<br> is provided in the DSIPARM data set. This sample is included by DSIPARM member CNMSCAT2 and is<br> intended for user command authorization table entries.<br>
+    When using CNMSCATU, review and make any necessary modifications to CNMSCAT2, while considering<br> the following rules:<br>
+    •	If you have more than one PROTECT statement that describes the same command, keyword and value,<br> the first statement is used and all others are ignored.<br>
+    •	More than one PERMIT statement can be specified for the same command identifier.<br>
+    <h3><b>CNMSTYLE</b></h3>
+    The CNMSTYLE member in the DSIPARM data set is used during NetView initialization. Make any changes<br> to CNMSTYLE statements in the CNMSTUSR or CxxSTGEN member. For information about changing<br> CNMSTYLE statements, see IBM Z NetView Installation: Getting Started. The CNMSTYLE member is<br> designed to simplify the NetView initialization process.<br>
+    For information about new, changed, or deleted CNMSTYLE statements, see “CNMSTNXT” on page 67.<br>
+    </p>
+    <h4><b>If you want information about...&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	Refer to...</b></h4>
+    <hr style="height: 1px; color: black; background-color: black;"><br>
+    <p>CNMSTYLE statements&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	IBM Z NetView Administration Reference
+
+    </p>
+    <h3><b>CNMSTACT</b></h3>
+    <p>
+        The CNMSTACT member includes the CNMSTAAL member if the IBM Z NetView for Continuous<br> Availability product is installed. The CNMSTACT member is used for the GDPS Continuous Availability<br> solution.
+        <h3><b>CNMSTIDS</b></h3>
+        The CNMSTIDS include member contains Intrusion Detection Services statements. The z/OS<br> Communications Server Version 1 Release 13 and Version 2 Release 1 Intrusion Detection Services<br> probes are added.
+        <h3><b>CNMSTNXT</b></h3>
+        The CNMSTNXT member contains CNMSTYLE statements that are new, changed, or deleted. Statements<br> are grouped according to version and release level of the NetView product. Review the statements in the<br> CNMSTNXT member and update the CNMSTUSR or CxxSTGEN member as necessary.<br>
+        <h2><b>DSICTMOD</b></h2>
+        DSICTMOD is the NetView constants module that can be updated using sample job CNMS0055. Use the<br> DSICTMOD module shipped with V6R3. If you updated CNMS0055 for your current release, merge those <br>changes into the V6R3 CNMS0055 sample, submit it to assemble, and link edit your changes into the<br> DSICTMOD module.<br>
+        The number of task and common global variable constants are now obsolete. The NetView program<br> dynamically increases storage as needed.<br>
+        <h2><b>DSIOPF</b></h2>
+        Starting with V6R2, the DSIOPF member has a new structure.<br>
+        </p>
+        <hr><hr>
+        <table border="1" cellpadding="5" cellspacing="1">
+            <tr><td>Include member</td><td>Description</td></tr>
+            <tr><td>DSIOPFAU</td><td>Includes existing AUTO1 and AUTO2 autotasks</td></tr>
+            <tr><td>DSIOPFEX</td><td>Includes sample operator definitions.<br>
+                All sample definitions in the DSIOPFEX member<br> can be modified or deleted without affecting the<br> operation of the NetView program.<br>
+                </td></tr>
+            <tr><td>DSIOPFIX</td><td>Includes operator definitions that cannot be<br> changed.<br>
+                See the comments in the DSIOPFIX member to<br> update necessary passwords.
+                </td></tr>
+            <tr><td>DSIOPFST</td><td>Includes operator definitions for which the<br> operator ID can be changed.<br>
+                The DSIOPFST member includes the following<br> additional members associated with the specified towers:<br>
+                •	EZLOPF (AON)<br>
+                •	FKVOPF (AON.SNA)<br>
+                •	FKXOPF (AON.TCP)<br>
+                •	FKXOPFIP (IPMGT)<br>
+                •	FLCSOPF (MSM)<br>
+                </td></tr>
+            <tr><td>DSIOPFU</td><td>Includes customer-defined operator definitions</td></tr>
+        </table>
+        If you modified the V6R2 DSIOPF member and you want to use the new structure, copy any changes that<br> you made into the appropriate V6R3 member.<br>
+<b>Usage note:</b> You can add Data REXX logic to conditionally define operator definitions in DSIOPFU. Data<br> REXX files must have either /*%DATA*/ or /*%LOGIC*/ as the first statement. Comments can follow on<br> the same or subsequent lines. A blank in the first column indicates a continuation of the previous<br> statement. For more information about Data REXX, refer to IBM Z NetView Installation: <i>Configuring<br></i><i> Additional Components.</i><br>
+
+<h2><b>DSIZVLSR</b></h2>
+The DSIZVLSR module defines the buffer pools to be used with the VSAM LSR and DSR performance<br> options. Update the DSIZVLSR module by using the CNMSJM01 sample job. Use the DSIZVLSR module<br> shipped with V6R3. If you previously updated the CNMSJM01 job, merge those changes into the V6R3<br> version of the CNMSJM01 job and run it to assemble and link edit your changes into the DSIZVLSR module.<br>
+<h3 class="b"><b>RODM Address Space</b></h3>
+<hr style="height: 1px; color:blue; background-color:blue;"><br>
+<p>The samples in this section list changes for the RODM address space.
+    <h2><b>EKGLOADP</b></h2><br>
+    EKGLOADP is the sample RODM load procedure JCL.<br>
+     Make the following changes to the EKGLOADP member:<br>
+    </p>
+<hr><hr>
+<p>1. For NetView data sets, ensure your high-level qualifier for system data sets points to<br> NETVIEW.V6R3M0.</p><br>
+<h2><b>EKGXRODM</b></h2><br>
+<p>The EKGXRODM member is the RODM start procedure.<br> Make the following changes to the EKGXRODM member:<br>
+    1.	For NetView data sets, ensure that your high-level qualifier for system data sets points to<br> NETVIEW.V6R3M0.<br>
+    2.	For NetView data sets, ensure that your high-level qualifier for user-defined data sets points to<br> NETVIEW.V6R3USER.<br>
+    </p>
+    <h3 class="b"><b>GMFHS Address Space</b></h3>
+    <hr style="height: 1px; color:blue; background-color:blue;"><br>
+    <p>The samples in this section list changes for the GMFHS address space.<br>
+        <h2><b>CNMGMFHS (CNMSJH10)</b></h2>
+        The CNMGMFHS (CNMSJH10) member is the GMFHS start procedure.<br> Make the following changes to the CNMGMFHS member:<br>
+        1.	For NetView data sets, ensure that your high-level qualifier for system data sets points to<br> NETVIEW.V6R3M0.<br>
+        2.	For NetView data sets, ensure that your high-level qualifier for user-defined data sets points to<br> NETVIEW.V6R3USER.<br>
+        </p>
+        <h3 class="b"><b>Additional Considerations</b></h3>
+        <hr style="height: 1px; color:blue; background-color:blue;"><br>
+        <p>Consider changes to the following functions:<br>
+            <u>•	“Message Logging” on page 78<br></u>
+        <u> •	“Sysplex and Enterprise Management” on page 78<br></u>
+    <u> •	“IBM Z NetView and IBM Z NetView Enterprise Management Agent Versions” on page 79<br></u>
+            </p>
+            <h3><b>Message Logging</b></h3>
+            <p>With NetView V6R2M1 APARs OA55071 and OA55074, changes have been made to the format of the<br> Canzlog data space (CNMCANZ0). If a NetView V6R2 instance will be running on the same LPAR as a<br> NetView V6R2M1 instance with the specified APARs applied, the NetView V6R2 instance must have<br> compatibility APAR OA56128 applied.<br>
+                As of NetView V6R3, changes have been made to the format of the Canzlog archive data spaces<br> (CNMCANZ1, CNMCANZ2,...,CNMCANZA) to reduce the amount of virtual storage required to browse<br> <i>Canzlog archives. See the IBM Z NetView Administration Reference for more information.</i><br>
+                </p>
+<h3><b>Sysplex and Enterprise Management</b></h3>
+<p>The NetView program supports OSA-Express 7S adapters in both 3270 command output and the <b>OSA<br> Channels and Ports</b> workspace in the Tivoli Enterprise Portal. Message BNH597I was changed starting<br> with the active speed mode data value that was previously only in column 92.</p><br>
+   <b>If you want information about...&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	Refer to...</b>
+<p>BNH597I&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	NetView online help or IBM Z NetView Messages and Codes Volume 1 (AAU-DSI)</p><br>
+<hr><hr>
+<p>Enterprise Management Agents changes	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<u>Enterprise Management Agents changes</u><br>
+<h3><b>IBM Z NetView and IBM Z NetView Enterprise Management Agent Versions</b></h3><br>
+<p>The IBM Z NetView Enterprise Management Agent (NetView agent) requires Tivoli Management Services<br> V6.3.0 Fixpack 7. If you are not currently running at this level, upgrade the following components to the<br> V6.3.0 Fixpack 7 level before you install the NetView agent:<br>
+    •	Tivoli Enterprise Portal desktop client<br>
+    •	Tivoli Enterprise Portal Server<br>
+    •	Hub Tivoli Enterprise Monitoring Server<br>
+    The NetView program is the data source for the NetView<br> agent. Because of this, both the NetView program and the NetView agent must be at the V6R3 level.<br>
+    Before upgrading the NetView agent, review the IBM OMEGAMON and Tivoli Management Services on z/OS<br> shared documentation Upgrade Guide. The general order of upgrade procedures documented for the<br> OMEGAMON XE V5.1 and later monitoring agents also applies to the NetView agent.<br>
+    Prior to IBM Tivoli Monitoring V6.2.3, before an agent could connect to a Tivoli Enterprise Monitoring <br>Server, you were required to manually update the monitoring server (and other Tivoli Management<br> Services components such as the Tivoli Enterprise Portal Server and the Tivoli Data Warehouse) with<br> information necessary for the monitoring server to recognize and process data sent by that agent. As of<br> V6.2.3, this seeding step becomes unnecessary. The NetView agent has been enhanced with the optional<br> self-description feature that automatically distributes the operating configuration directly to the local<br> monitoring server, which then distributes those agent configuration files first to the hub monitoring server<br> (if necessary) and then to the various IBM Tivoli Monitoring components that require it.<br>
+    For a list of changes to the NetView agent that were made in Version 6.2.1, see <u>“Enterprise Management<br> Agent Changes” on page 150.<br></u>
+    </p>
+
+</p>
+</body>
+    <style>
+        .body{
+    text-align: justify;
+    padding-left:35%;
+    padding-right:30%;
+    }
+        .Table{
+            border-left: none;
+        
+            border-right: none;
+        }
+    .b{
+        color: blue;
+    }
+    
+    </style>
+</html>
